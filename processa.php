@@ -17,6 +17,18 @@ $grupos = array(
 //criando conexão com o banco de dados
 $cn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$pass") or die("Erro na conexao com o banco!");
 
+
+
+/*
+ * Nesta página já saberei o que fazer:
+ * Criar grupo,
+ * Criar Usuario,
+ * Atualizar usuario
+ * Trocar de grupo
+ * Deletar usuario
+ */
+
+
 //buscando todos os usuarios cadastrados no NSac.
 $sqlUsuarios = "SELECT nomedeusuario,senha,tema,tipo,level FROM web.usuarios ORDER BY tipo";
 $stUsuarios  = pg_query($cn,$sqlUsuarios);

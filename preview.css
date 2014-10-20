@@ -23,7 +23,7 @@ thead{
 
 .botoes{
     float: right;
-    padding-top: 40px;
+    padding-top: 17px;
 }
 
 body{
@@ -33,4 +33,13 @@ padding-bottom: 160px;
 .acao{
     font-weight: bold;
     text-align: center;
+    margin-top: 119px;
+}
+
+.detalhes{
+    margin-top: 20px;
+}
+
+.samba{
+    float: right;
 }

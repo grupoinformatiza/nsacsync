@@ -15,14 +15,15 @@ function montaLinhaSamba(id){
                 + '</tr>';
     return html;
 }
-function log(str){
-    $('#log').append(str+'<br />');
+function log(str,cl){
+    $('#log').append('<span class="text-'+cl+'">'+str+'</span><br />');
 }
 /**
  * busca os dados do banco de dados do nSac e coloca na  tabela do lado esquerdo
  * @returns {undefined}
  */
 function carregarBancoDados(){
+    log('Carregando dados do NSac...','primary');
     $.post(
         'processa.php',
         {type:'carregarBancoDados'},
@@ -52,7 +53,7 @@ function carregarBancoDados(){
                     $(montaLinhaAcao(u.usuario)).appendTo('.acao');
                     $(montaLinhaSamba(u.usuario)).appendTo('#tblSamba');
                 }
-                log('Dados do Nsac carregados com êxito.');
+                log('Dados do Nsac carregados com êxito.','success');
                 
             }
             

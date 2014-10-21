@@ -9,6 +9,18 @@
     </head>
     <body>
         <div class="container">
+            <div class="row detalhes">
+                <div class="col-lg-5">
+                    <strong>Host:</strong> 200.145.153.172&nbsp;&nbsp;
+                    <strong>Porta:</strong> 5432&nbsp;&nbsp;
+                    <strong>BD:</strong> ns-data&nbsp;&nbsp;
+                    <strong>Usuário:</strong> ns&nbsp;&nbsp;
+                    <strong>Senha:</strong> ns-cti
+                </div>
+                <div class="col-lg-5 samba">
+                    samba-tool local
+                </div>
+            </div>
             <div class="row">
                     <div class="col-lg-5">
                         <div class="page-header">
@@ -30,9 +42,6 @@
                     </div><!-- /coluna nsac -->
 
                     <div class="col-lg-2">
-                        <div class="page-header">
-                            <h1>&nbsp;</h1>
-                        </div> 
                         <div class="table-responsive ">
                             <table class=" table acao">
                                 <thead>
@@ -65,22 +74,24 @@
                             </table>
                         </div><!-- /tabela -->
                     </div><!-- /coluna samba -->
-            </div><!-- /row-->
-            
-            <div class="row botoes">
-                <div class="col-lg-12">
-                    <button type="button" class="btn btn-lg btn-danger"><span class="glyphicon glyphicon-remove"></span> Parar</button>
-                    <button type="button" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-lock"></span> Sincronizar senhas</button>
-                    <button type="button" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-refresh"></span> Sincronizar</button>
-                </div>
-            </div>
-            
+            </div><!-- /row-->                 
         </div><!-- /container -->
         <div class="footer" style="overflow-y: auto">
             <div class="container">
-                <div class="row">
+                <div class="row botoes">
                     <div class="col-lg-12">
                         <strong>Log</strong>
+                        <div class="cont">
+                            <button type="button" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span> Parar</button>
+                            <button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-lock"></span> Sincronizar senhas</button>
+                            <button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-refresh"></span> Sincronizar</button>
+                            <button type="button" class="btn btn-sm"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                        </div>
+                    </div>
+                </div>                    
+                <div class="row">
+                    <div class="col-lg-12">
+                        
                         <div id="log"></div>
                     </div>
                 </div>

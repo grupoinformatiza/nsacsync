@@ -6,12 +6,6 @@ $user   = $_POST['user'];
 $pass   = $_POST['pass'];
 $dbname = $_POST['dbname'];
 
-//Grupos de acordo com a coluna tipo da tabela usuarios do NSac
-$grupos = array(
-    0 => "alunos",
-    1 => "professores",
-    3 => "secretaria"    
-);
 
 
 //criando conexão com o banco de dados

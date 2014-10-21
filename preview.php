@@ -15,7 +15,7 @@
                             <h1>NSac</h1>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="tblNsac">
                                 <thead>
                                     <tr>
                                         <td>Usuário</td>
@@ -23,29 +23,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td colspan="2" class="principal">Alunos</td>                                
-                                    </tr>
-                                    <tr>
-                                        <td>1257020</td>
-                                        <td>73C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1257016</td>
-                                        <td>73C</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" class="principal">Professores</td>
-
-                                    </tr>
-                                     <tr>
-                                        <td>Celso</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vitor</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
+                                    
                                 </tbody>
                             </table>
                         </div><!-- /tabela -->
@@ -61,12 +39,7 @@
                                     <tr><td>&nbsp;</td></tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td>Deletado</td></tr>
-                                    <tr><td>Deletado</td></tr>
-                                    <tr><td>&nbsp;</td></tr>
-                                    <tr><td>&nbsp;</td></tr>
-                                    <tr><td>&nbsp;</td></tr>
-                                    <tr><td>&nbsp;</td></tr>
+                                    
                                 </tbody>
                                 
 
@@ -78,8 +51,8 @@
                         <div class="page-header">
                             <h1>Samba</h1>
                         </div>
-                                        <div class="table-responsive">
-                            <table class="table table-hover">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="tblSamba">
                                 <thead>
                                     <tr>
                                         <td>Usuário</td>
@@ -87,29 +60,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td colspan="2" class="principal">Alunos</td>                                
-                                    </tr>
-                                    <tr>
-                                        <td>1257020</td>
-                                        <td>73C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1257016</td>
-                                        <td>73C</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" class="principal">Professores</td>
 
-                                    </tr>
-                                     <tr>
-                                        <td>Celso</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Vitor</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div><!-- /tabela -->
@@ -129,21 +80,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit 
-                                    sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus 
-                                    magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. 
-                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. 
-                                    Aenean lacinia bibendum nulla sed consectetur.</p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit 
-                                    sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus 
-                                    magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. 
-                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. 
-                                    Aenean lacinia bibendum nulla sed consectetur.</p>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed diam eget risus varius blandit 
-                                    sit amet non magna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus 
-                                    magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum. 
-                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. 
-                                    Aenean lacinia bibendum nulla sed consectetur.</p>
+                        <strong>Log</strong>
+                        <div id="log"></div>
                     </div>
                 </div>
             </div>
@@ -152,5 +90,6 @@
     </body>
     
     <script type="text/javascript" src="jquery.js" ></script>
+    <script type="text/javascript" src="preview.js" ></script>
     
 </html>

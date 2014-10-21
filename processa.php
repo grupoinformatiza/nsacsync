@@ -1,24 +1,4 @@
 <?php
-
-$host   = $_POST['host'];
-$port   = $_POST['port'];
-$user   = $_POST['user'];
-$pass   = $_POST['pass'];
-$dbname = $_POST['dbname'];
-
-//Grupos de acordo com a coluna tipo da tabela usuarios do NSac
-$grupos = array(
-    0 => "alunos",
-    1 => "professores",
-    3 => "secretaria"    
-);
-
-
-//criando conexão com o banco de dados
-$cn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$pass") or die("Erro na conexao com o banco!");
-
-
-
 /*
  * Nesta página já saberei o que fazer:
  * Criar grupo,
@@ -27,33 +7,30 @@ $cn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$pass
  * Trocar de grupo
  * Deletar usuario
  */
+//Grupos de acordo com a coluna tipo da tabela usuarios do NSac
+$grupos = array(
+    0 => "alunos",
+    1 => "professores",
+    3 => "secretaria"    
+);
 
 
-//buscando todos os usuarios cadastrados no NSac.
-$sqlUsuarios = "SELECT nomedeusuario,senha,tema,tipo,level FROM web.usuarios ORDER BY tipo";
-$stUsuarios  = pg_query($cn,$sqlUsuarios);
+//Processamento da requisição para listagem dos usuários no banco do nsac.
+//Lista os usuarios e retorna um html para a coluna da esquerda.
+if(isset($_POST['type']) && $_POST['type'] == 'carregarBancoDados'){
+    $cn = pg_connect("host=200.145.153.172 port=5432 dbname=ns-data user=ns password=ns-cti") or die("Erro na conexao com o banco!");
+    //buscando todos os usuarios cadastrados no NSac.
+    $sqlUsuarios = "SELECT nomedeusuario,senha,tema,tipo,level FROM web.usuarios ORDER BY tipo";
+    $stUsuarios  = pg_query($cn,$sqlUsuarios);
 
-if(!$stUsuarios)
-    die("Falha buscando usuarios!");
-
-if(pg_num_rows($stUsuarios) == 0)
-    die("Nenhum usuario encontrado!");
-
-
-$auxGrp = '';
-
-
-while($u = pg_fetch_object($stUsuarios)){
-    
+    $auxGrp = '';
+    $html   = "";
+    while($u = pg_fetch_object($stUsuarios)){
         //Cabeçalho do grupo na tela
-        if($u->tipo != $auxGrp){
-            echo "<h1>{$grupos[$u->tipo]}</h1>";
-        }
-        
-        
-        
-        echo $u->nomedeusuario . "<br />";
-       
+        $ret['dados'][] = array("grupo" => $grupos[$u->tipo],"usuario"=>$u->nomedeusuario);
+    }
+    die(json_encode($ret));
 }
+
 
 

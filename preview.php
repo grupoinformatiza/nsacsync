@@ -74,23 +74,24 @@
                             </table>
                         </div><!-- /tabela -->
                     </div><!-- /coluna samba -->
-            </div><!-- /row-->
-            
-            <div class="row botoes">
-                <div class="col-lg-12">
-                    <button type="button" class="btn btn-lg btn-danger"><span class="glyphicon glyphicon-remove"></span> Parar</button>
-                    <button type="button" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-lock"></span> Sincronizar senhas</button>
-                    <button type="button" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-refresh"></span> Sincronizar</button>
-                </div>
-            </div>
-            
+            </div><!-- /row-->                 
         </div><!-- /container -->
         <div class="footer" style="overflow-y: auto">
             <div class="container">
-                    <button type="button" class="btn pull-right btn-sm"><span class="glyphicon glyphicon-chevron-down"></span></button>
-                <div class="row">
+                <div class="row botoes">
                     <div class="col-lg-12">
                         <strong>Log</strong>
+                        <div class="cont">
+                            <button type="button" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span> Parar</button>
+                            <button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-lock"></span> Sincronizar senhas</button>
+                            <button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-refresh"></span> Sincronizar</button>
+                            <button type="button" class="btn btn-sm"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                        </div>
+                    </div>
+                </div>                    
+                <div class="row">
+                    <div class="col-lg-12">
+                        
                         <div id="log"></div>
                     </div>
                 </div>

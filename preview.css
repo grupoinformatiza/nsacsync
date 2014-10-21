@@ -17,13 +17,13 @@ thead{
   bottom: 0;
   width: 100%;
   height: 150px;
-  background-color: #dcdcdc;
+  background-color: #EDEDED;
   padding-top: 10px;
+  box-shadow: 0 4px 7px 5px;
 }
 
-.botoes{
+.botoes .cont{
     float: right;
-    padding-top: 17px;
 }
 
 body{

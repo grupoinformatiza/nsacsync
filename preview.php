@@ -14,8 +14,6 @@
                     <strong>Host:</strong> 200.145.153.172&nbsp;&nbsp;
                     <strong>Porta:</strong> 5432&nbsp;&nbsp;
                     <strong>BD:</strong> ns-data&nbsp;&nbsp;
-                    <strong>Usuário:</strong> ns&nbsp;&nbsp;
-                    <strong>Senha:</strong> ns-cti
                 </div>
                 <div class="col-lg-5 samba">
                     samba-tool local

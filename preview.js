@@ -28,7 +28,7 @@ function carregarBancoDados(){
         'processa.php',
         {type:'carregarBancoDados'},
         function(ret){
-            if(ret.dados){
+            if(ret.status){
                 var linha = '';
                 var auxGrp = '';
                 var u = '';
@@ -36,7 +36,7 @@ function carregarBancoDados(){
                     u = ret.dados[x];
                     
                     if(auxGrp != u.grupo){ //cabeçalho dos grupos
-                        linha = '<tr>'
+                        linha = '<tr id="nsac_'+u.grupo+'" class="grupo" data-desc="'+u.grupo+'">'
                                 + '<td colspan="2" class="principal">'+u.grupo+'</td>'
                                 + '</tr>';
                         $(linha).appendTo('#tblNsac'); //linha do grupo
@@ -45,7 +45,7 @@ function carregarBancoDados(){
                         auxGrp = u.grupo;
                     }
                     
-                    linha = '<tr>'
+                    linha = '<tr id="nsac_'+u.usuario+'">'
                             + '<td>'+u.usuario+'</td>'
                             + '<td></td>'
                             + '</tr>';
@@ -54,10 +54,35 @@ function carregarBancoDados(){
                     $(montaLinhaSamba(u.usuario)).appendTo('#tblSamba');
                 }
                 log('Dados do Nsac carregados com êxito.','success');
-                
+                iniciarGrupos();
+            }else{
+                log(ret.erro,'danger');
             }
             
         },
         'json'
     );
+}
+
+function iniciarGrupos(){
+    
+    log("Iniciando busca dos grupos...","primary");
+    var desc = '';
+    
+    $('.grupo').each(function(){
+        desc = $(this).data('desc');
+        log("Verificando se o grupo "+desc+" existe no Samba...","primary");
+        
+        $.post(
+            'processa.php',
+            {type:'buscarGrupo',desc:desc},
+            function(ret){
+                if(ret){
+                    log("Grupo "+desc+" existe, listando usuários...","info");
+                }
+            },
+            'json'
+        );
+        
+    });
 }

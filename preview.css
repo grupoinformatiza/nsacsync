@@ -1,7 +1,16 @@
 .container{
     width: 1320px;
 }
-
+.glyphicon-chevron-down{
+    -webkit-transition: -webkit-transform 0.5s ease-in;
+     -moz-transition: -moz-transform 0.5s ease-in;
+       -o-transition: -o-transform 0.5s ease-in;
+          transition: transform 0.5s ease-in;
+}
+.cima{
+    -webkit-transform: rotate(180deg);
+    transform:rotate(180deg);
+}
 thead{
     font-weight: bold;
     font-size: 17px;
@@ -11,8 +20,14 @@ thead{
     background-color: #F8F8FF;
     font-weight: bold;
 }
-
+.minimizado{
+    height:48px !important;
+}
 .footer {
+-webkit-transition: -webkit-height 0.5s ease-in;
+ -moz-transition: -moz-height 0.5s ease-in;
+   -o-transition: -o-height 0.5s ease-in;
+      transition: height 0.5s ease-in;
   position: fixed;
   bottom: 0;
   width: 100%;

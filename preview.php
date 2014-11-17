@@ -97,8 +97,8 @@
                     <div class="col-lg-4">
                         <div class="cont">
                             
-                            <button type="button" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span> Parar</button>
-                            <button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-refresh"></span> Sincronizar</button>
+                            <!--<button type="button" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span> Parar</button>
+                            <button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-refresh"></span> Sincronizar</button>-->
                             <button type="button" class="btn btn-sm btnseta"><span class="glyphicon glyphicon-chevron-down"></span></button>
                         </div>
                     </div>

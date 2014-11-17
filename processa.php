@@ -31,7 +31,7 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
     $grupo = $_POST['grupo'];
     
     //Criando usuario em sua respectiva OU
-    $excUser = shell_exec("sudo samba-tool user add $usuario teste --userou=OU=$ou 2>&1");
+    $excUser = shell_exec("sudo samba-tool user add $usuario 123 --userou=OU=$ou --must-change-at-next-login 2>&1");
     //Adicionando usuario no grupo de sua OU
     $excGrpOu = shell_exec("sudo samba-tool group addmembers $ou $usuario 2>&1");
     
@@ -49,7 +49,7 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
         
         $exc = shell_exec("sudo cp /home/arquivos-samba/cloudQuota/usercloudQuota.ldif /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         $exc .= shell_exec("sudo sed -i s/CN_USUARIO/$nomeUsuario/g && sed -i s/QUOTA_USUARIO/60m/g 2>&1");
-        $exc .= shell_exec("sudo ldbmodify -H /usr/local/samba/private/sam.ldb {$usuario}cloudQuota.ldif2>&1");
+        $exc .= shell_exec("sudo ldbmodify -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         die($exc);
     }else{
         $msg .= "usuário existe.";

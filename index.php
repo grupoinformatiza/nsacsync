@@ -25,17 +25,17 @@
                             </div>
                             <div class="col-lg-6">
                                 <label>
-                                    <h3>BD:  <input type="text" name="dbname" value="nsac" class="form-control input-lg"></h3>
+                                    <h3>BD:  <input type="password" name="dbname" value="nsac" class="form-control input-lg"></h3>
                                 </label>
                             </div>
                             <div class="col-lg-6">
                                 <label>
-                                    <h3>Usuário: <input type="text" name="user" value="postgres" class="form-control input-lg"> </h3>
+                                    <h3>Usuário: <input type="password" name="user" value="postgres" class="form-control input-lg"> </h3>
                                 </label>
                             </div>
                             <div class="col-lg-6">
                                 <label>
-                                    <h3>Senha:  <input type="text" name="pass" value="oklahoma1" class="form-control input-lg"></h3>
+                                    <h3>Senha:  <input type="password" name="pass" value="oklahoma1" class="form-control input-lg"></h3>
                                 </label>
                             </div>
                         </div><!-- jumbotron -->

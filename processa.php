@@ -47,11 +47,10 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
         
         $nomeUsuario = "CN=$usuario,OU=$ou";
         
-        $exc = shell_exec("sudo cp /home/arquivos-samba/cloudQuota/usercloudQuota.ldif /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
+        $exc  = shell_exec("sudo cp /home/arquivos-samba/cloudQuota/usercloudQuota.ldif /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         $exc .= shell_exec("sudo sed -i 's/CN_USUARIO/$nomeUsuario/g' /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
-        //$exc .= shell_exec("sudo sed -i 's/QUOTA_USUARIO/60' m/g")
+        $exc .= shell_exec("sudo sed -i 's/QUOTA_USUARIO/60 m/g' /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         $exc .= shell_exec("sudo ldbmodify -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
-        die($exc);
     }else{
         $msg .= "usuário existe.";
     }
@@ -80,13 +79,38 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
     die(json_encode($ret));
 }
 
+function criarShare($grp,&$ret){
+    //Tentando criar pasta compartilhada
+    $pasta = shell_exec("sudo mkdir $grp /home/shares/ 2>&1");
+
+    if(strpos($pasta, 'File exists') !== false){ //arquivo existe
+        $ret['msg'] .= ' | Pasta compartilhada já existe.';
+    }else{
+        $ret['msg'] .= " | Pasta compartilhada foi criada.";
+
+        //verificando arquivo smb.conf
+        $smb = shell_exec("sudo grep '$grp' /usr/local/samba/etc/smb.conf 2>&1");
+
+        if(strpos($smb,"[$grp]") !== false){
+            $ret['msg'] .= " | Grupo já está no smb.conf";
+        }else{
+            //Criar grupo no smb.conf
+
+            $criar = shell_exec("sudo echo -e \"\n[$grp]\n\tpath = /home/shares/$grp\n\tread only = Yes\" 2>&1");
+            $atualizar = shell_exec("sudo smbclient all reload-config 2>&1");
+
+            die($criar . ' - ' . $atualizar);
+        }
+    }
+}
+
 if(isset($_POST['type']) && $_POST['type'] == 'buscarGrupo'){
     
     $grp = $_POST['grp'];
     $ou  = $_POST['ou'];
     
     $exc = shell_exec("sudo samba-tool group add $grp --groupou=OU=$ou 2>&1");
-    if(strpos($exc,'already')){
+    if(strpos($exc,'already')){    
         $ret['status'] = true;
         $ret['msg']    = 'Grupo existe';
     }elseif(strpos($exc,'failed')){
@@ -94,8 +118,20 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarGrupo'){
         $ret['msg']    = 'Grupo não existe, ocorreu uma falha na criação. Detalhes: '.$exc;
     }else{
         $ret['status'] = true;
-        $ret['msg']    = 'grupo não existia mas foi criado.';
+        $ret['msg']    = 'grupo não existia e foi criado.';
     }
+    
+    if($ret['status']){
+        criarShare($grp,$ret);
+        
+    }
+    /* 
+            se a OU não existir no smb.conf:
+            root@cloud:/home/arquivos-samba# echo -e "\n[[NOME_OU]|[NOME_GRUPO]]\n\tpath = /home/shares/[NOME_OU]|[NOME_GRUPO]\n\tread only = Yes"
+
+            Atualiza o samba:
+            root@cloud:/home/arquivos-samba# smbclient all reload-config
+         */
     
     die(json_encode($ret));
 }
@@ -112,10 +148,11 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarOU'){
     $exc .= shell_exec("sudo ldbadd -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/{$ou}OU.ldif 2>&1");
     
     //criando grupo da OU na OU
-    $exc .= shell_exec("sudo samba-tool group add $ou --groupou=OU=$ou");
+    $exc .= shell_exec("sudo samba-tool group add $ou --groupou=OU=$ou 2>&1");
+    
+    die($exc);
     
     //$exc = shell_exec("ldbadd -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/TesteOU.ldif");
-    
     if(strpos($exc, 'already')){
         $ret['status'] = true;
         $ret['msg']    = 'OU Existe';
@@ -126,7 +163,9 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarOU'){
         $ret['status'] = false;
         $ret['msg'] = "OU Não existe e ocorreu erro na criação. Detalhes :".$exc;
     }
-
+    if($ret['status']){
+        criarShare($ou,$ret);
+    }
     die(json_encode($ret));
     
 }

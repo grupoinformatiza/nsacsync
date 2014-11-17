@@ -48,7 +48,8 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
         $nomeUsuario = "CN=$usuario,OU=$ou";
         
         $exc = shell_exec("sudo cp /home/arquivos-samba/cloudQuota/usercloudQuota.ldif /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
-        $exc .= shell_exec("sudo sed -i s/CN_USUARIO/$nomeUsuario/g && sed -i s/QUOTA_USUARIO/60m/g 2>&1");
+        $exc .= shell_exec("sudo sed -i 's/CN_USUARIO/$nomeUsuario/g' /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
+        //$exc .= shell_exec("sudo sed -i 's/QUOTA_USUARIO/60' m/g")
         $exc .= shell_exec("sudo ldbmodify -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         die($exc);
     }else{

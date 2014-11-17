@@ -150,7 +150,7 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarOU'){
     //criando grupo da OU na OU
     $exc .= shell_exec("sudo samba-tool group add $ou --groupou=OU=$ou 2>&1");
     
-    die($exc);
+    //die($exc);
     
     //$exc = shell_exec("ldbadd -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/TesteOU.ldif");
     if(strpos($exc, 'already')){

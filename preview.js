@@ -47,7 +47,7 @@ function carregarBancoDados(){
                     u = ret.dados[x];
                     
                     if(auxGrp != u.grupo){ //cabeçalho dos grupos
-                        linha = '<tr id="nsac_'+u.grupo+'" class="grupo" data-desc="'+u.grupo+'" data-tipo="ou">'
+                        linha = '<tr id="nsac_'+u.grupo+'" class="grupo" data-desc="'+u.grupo+'" data-tipo="ou" data-share="'+u.share+'" data-quota="'+u.quota+'">'
                                 + '<td colspan="2" class="principal">'+u.grupo+'</td>'
                                 + '</tr>';
                         $(linha).appendTo('#tblNsac'); //linha do grupo
@@ -57,7 +57,7 @@ function carregarBancoDados(){
                     }
                     
                     if(auxSub != u.subgrupo && u.subgrupo != null){
-                        linha = '<tr id="nsac_'+u.subgrupo+'" class="subgrupo" data-ou="'+u.grupo+'" data-desc="'+u.subgrupo+'" data-tipo="grupo">'
+                        linha = '<tr id="nsac_'+u.subgrupo+'" class="subgrupo" data-ou="'+u.grupo+'" data-desc="'+u.subgrupo+'" data-tipo="grupo" data-share="'+u.share+'" data-quota="'+u.quota+'">'
                                 + '<td colspan="2" class="principal">'+u.subgrupo+'</td>'
                                 + '</tr>';
                         $(linha).appendTo('#tblNsac'); //linha do subgrupo
@@ -66,7 +66,7 @@ function carregarBancoDados(){
                         auxSub = u.subgrupo;
                     }
                     
-                    linha = '<tr id="nsac_'+u.usuario+'" data-tipo="user" data-ou="'+u.grupo+'" data-grupo="'+u.subgrupo+'" data-desc="'+u.usuario+'">'
+                    linha = '<tr id="nsac_'+u.usuario+'" data-tipo="user" data-ou="'+u.grupo+'" data-grupo="'+u.subgrupo+'" data-desc="'+u.usuario+'" data-share="'+u.share+'" data-quota="'+u.quota+'">'
                             + '<td>'+u.usuario+'</td>'
                             + '<td></td>'
                             + '</tr>';
@@ -118,13 +118,17 @@ function iniciarOU(){
 //busca e cria se não existir. Depois, chama a proxima OU da fila.
 function buscarOU(indice){
     var desc = $('[data-tipo=ou]').eq(indice).data('desc');
+    var quota = $('[data-tipo=ou]').eq(indice).data('share');
+    var share = $('[data-tipo=ou]').eq(indice).data('quota');
     if($('[data-tipo=ou]').eq(indice).length != 0){
         log('Buscando OU '+desc,"primary");
         $.post(
             'processa.php',
             {
                 type: 'buscarOU',
-                ou: desc
+                ou: desc,
+                share: share,
+                quota:quota
             },
             function(ret){
                 if(!ret.status){
@@ -157,7 +161,8 @@ function atualizaProgresso(){
 function buscarUsuario(indice){
     var desc = $('[data-tipo=user]').eq(indice).data('desc');
     $('#acao_'+desc).find('td').addClass('text-info').html('Processando...');
-        
+    var quota = $('[data-tipo=user]').eq(indice).data('share');
+    var share = $('[data-tipo=user]').eq(indice).data('quota');
     if($('[data-tipo=user]').eq(indice).length != 0){
         
         log('Buscando usuário '+desc,"primary");
@@ -167,7 +172,9 @@ function buscarUsuario(indice){
                 type: 'buscarUsuario',
                 user: desc,
                 ou: $('[data-tipo=user]').eq(indice).data('ou'),
-                grupo: $('[data-tipo=user]').eq(indice).data('grupo')
+                grupo: $('[data-tipo=user]').eq(indice).data('grupo'),
+                quota:quota,
+                share:share
             },
             function(ret){
                 $('#acao_'+desc).find('td').removeClass('text-info');
@@ -194,6 +201,8 @@ function buscarUsuario(indice){
 //busca e cria se não existir. Depois, chama o proximo OU da fila.
 function buscarGrupo(indice){
     var desc = $('[data-tipo=grupo]').eq(indice).data('desc');
+    var quota = $('[data-tipo=grupo]').eq(indice).data('share');
+    var share = $('[data-tipo=grupo]').eq(indice).data('quota');
     if($('[data-tipo=grupo]').eq(indice).length != 0){
         log('Buscando Grupo '+desc,"primary");
         $.post(
@@ -201,7 +210,9 @@ function buscarGrupo(indice){
             {
                 type: 'buscarGrupo',
                 grp: desc,
-                ou: $('[data-tipo=grupo]').eq(indice).data('ou')
+                ou: $('[data-tipo=grupo]').eq(indice).data('ou'),
+                quota:quota,
+                share:share
             },
             function(ret){
                 if(!ret.status){

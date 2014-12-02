@@ -1,11 +1,13 @@
 .botao{
     margin-top: 20px;
 }
-
-.jumbotron{
+.btn-success,.btn-info{
+    margin-bottom:10px;
+}
+.bd{
     height: 430px;
 }
 
-.form-control{
+.bd .form-control{
     width: 400px;
 }

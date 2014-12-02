@@ -1,13 +1,5 @@
 <?php
 ini_set('display_errors',0);
-/*
- * Nesta página já saberei o que fazer:
- * Criar grupo,
- * Criar Usuario,
- * Atualizar usuario
- * Trocar de grupo
- * Deletar usuario
- */
 
 function getConexao($host,$port,$db,$user,$pass){
     $cn = pg_connect("host=$host port=$port dbname=$db user=$user password=$pass");
@@ -16,13 +8,23 @@ function getConexao($host,$port,$db,$user,$pass){
     return $cn;
 }
 
-//Grupos de acordo com a coluna tipo da tabela usuarios do NSac
-$grupos = array(
-    0 => "Aluno",
-    1 => "Professores",
-    3 => "Secretaria"    
-);
 
+if(isset($_POST['type']) && $_POST['type'] == 'buscarConfiguracoes'){
+    
+    die(file_get_contents('parametros.txt'));
+    
+}
+if(isset($_POST['type']) && $_POST['type'] == 'salvarConfiguracoes'){
+    
+    $dados = json_encode($_POST['ou']);
+    if(file_put_contents('parametros.txt', $dados)){
+        $ret['status'] = true;
+    }else{
+        $ret['status'] = false;
+    }
+    die(json_encode($ret));
+    
+}
 
 if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
     
@@ -49,7 +51,7 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
         
         $exc  = shell_exec("sudo cp /home/arquivos-samba/cloudQuota/usercloudQuota.ldif /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         $exc .= shell_exec("sudo sed -i 's/CN_USUARIO/$nomeUsuario/g' /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
-        $exc .= shell_exec("sudo sed -i 's/QUOTA_USUARIO/60 m/g' /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
+        $exc .= shell_exec("sudo sed -i 's/QUOTA_USUARIO/$quota m/g' /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
         $exc .= shell_exec("sudo ldbmodify -H /usr/local/samba/private/sam.ldb /home/arquivos-samba/cloudQuota/{$usuario}cloudQuota.ldif 2>&1");
     }else{
         $msg .= "usuário existe.";
@@ -98,8 +100,6 @@ function criarShare($grp,&$ret){
 
             $criar = shell_exec("sudo echo -e \"\n[$grp]\n\tpath = /home/shares/$grp\n\tread only = Yes\" 2>&1");
             $atualizar = shell_exec("sudo smbclient all reload-config 2>&1");
-
-            die($criar . ' - ' . $atualizar);
         }
     }
 }
@@ -121,17 +121,9 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarGrupo'){
         $ret['msg']    = 'grupo não existia e foi criado.';
     }
     
-    if($ret['status']){
+    if($ret['status'] && $share){
         criarShare($grp,$ret);
-        
     }
-    /* 
-            se a OU não existir no smb.conf:
-            root@cloud:/home/arquivos-samba# echo -e "\n[[NOME_OU]|[NOME_GRUPO]]\n\tpath = /home/shares/[NOME_OU]|[NOME_GRUPO]\n\tread only = Yes"
-
-            Atualiza o samba:
-            root@cloud:/home/arquivos-samba# smbclient all reload-config
-         */
     
     die(json_encode($ret));
 }
@@ -163,44 +155,60 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarOU'){
         $ret['status'] = false;
         $ret['msg'] = "OU Não existe e ocorreu erro na criação. Detalhes :".$exc;
     }
-    if($ret['status']){
+    if($ret['status'] && $share){
         criarShare($ou,$ret);
     }
     die(json_encode($ret));
     
 }
-if(isset($_POST['type']) && $_POST['type'] == 'buscarOU'){
-    $ou = $_POST['ou'];
-    //Executando comando shell para buscar a OU
-    $ex = shell_exec("ldbsearch -H /usr/local/samba/private/sam.ldb '(OU=*$ou)' 2>&1");
-    $str = strpos($ex, '0 entries');
-    
-    
-    if($str != false){ //encontrou, OU não existe
-        $ret['existe'] = false;
-    }else{
-        $ret['existe'] = true;
-    }
-    
-    die(json_encode($ret));    
-}
+
 //Processamento da requisição para listagem dos usuários no banco do nsac.
 //Lista os usuarios e retorna um html para a coluna da esquerda.
 if(isset($_POST['type']) && $_POST['type'] == 'carregarBancoDados'){
+    //buscando parametros
+    $prm = file_get_contents('parametros.txt');
+    
+    if(trim($prm) == ''){
+        $ret['status'] = false;
+        $ret['erro'] = "A parâmetrização não foi informada, verifique na tela anterior, informe os parâmetros e clique no disquete para salvar.";
+        die(json_encode($ret));
+    }
+    
+    
     $cn = getConexao($_POST['host'], $_POST['port'], $_POST['dbname'], $_POST['user'], $_POST['pass']);
     if(!$cn){
         $ret['status'] = false;
         $ret['erro']   = "Erro na conexão com o banco de dados";
         die(json_encode($ret));
     }
+    
+    $prm = json_decode($prm);
+    
+    $grupos = '';
+    
+    
+    for($x = 0; $x < count($prm); $x ++){
+        $grupos .= $prm[$x]->codigo.',';
+        
+        $grp[$prm[$x]->codigo] = array(
+            
+            'nome' => $prm[$x]->nome,
+            'share' => $prm[$x]->share,
+            'quota' => $prm[$x]->quota
+            
+        );
+        
+    }
+    
+    $grupos = rtrim($grupos,',');
     $ret['status'] = true;
     //buscando todos os usuarios cadastrados no NSac.
     $sqlUsuarios = ""
             . "SELECT nomedeusuario,senha,tema,tipo,level,t.nomenclatura As subgrupo "
             . "FROM web.usuarios usu "
-            . "LEFT JOIN alunos.matriculas mat ON (usu.nomedeusuario = mat.aluno) "
+            . "LEFT JOIN alunos.matriculas mat ON (usu.nomedeusuario = mat.aluno AND mat.situacao = 0) "
             . "LEFT JOIN public.turmas t ON (mat.turma = t.codigo) "
-            . "WHERE usu.tipo <> 0 "
+            . "WHERE tipo IN ($grupos) "
             . "ORDER BY tipo,subgrupo";
     $stUsuarios  = pg_query($cn,$sqlUsuarios);
     if(pg_num_rows($stUsuarios) == 0){
@@ -211,20 +219,12 @@ if(isset($_POST['type']) && $_POST['type'] == 'carregarBancoDados'){
     $html   = "";
     while($u = pg_fetch_object($stUsuarios)){
         //Cabeçalho do grupo na tela
-        $ret['dados'][] = array("grupo" => $grupos[$u->tipo],"usuario"=>$u->nomedeusuario,"subgrupo"=>$u->subgrupo);
+        $ret['dados'][] = array("grupo" => $grp[$u->tipo]['nome'],"usuario"=>$u->nomedeusuario,"subgrupo"=>$u->subgrupo,
+            "share" => $grp[$u->tipo]['share'], "quota" => $grp[$u->tipo]['quota']
+            );
     }
     die(json_encode($ret));
 }
-
-if(isset($_POST['type']) && $_POST['type'] == 'buscarGrupo'){
-    
-    require_once 'funcoes_samba_tool.php';
-    
-    die('oi');
-    
-}
-
-
 
 if(isset($_GET['acao']) && $_GET['acao'] == 'criaralunos'){
     

@@ -83,7 +83,7 @@ if(isset($_POST['type']) && $_POST['type'] == 'buscarUsuario'){
 
 function criarShare($grp,&$ret){
     //Tentando criar pasta compartilhada
-    $pasta = shell_exec("sudo mkdir $grp /home/shares/ 2>&1");
+    $pasta = shell_exec("sudo mkdir /home/shares/$grp 2>&1");
 
     if(strpos($pasta, 'File exists') !== false){ //arquivo existe
         $ret['msg'] .= ' | Pasta compartilhada já existe.';
@@ -98,7 +98,7 @@ function criarShare($grp,&$ret){
         }else{
             //Criar grupo no smb.conf
 
-            $criar = shell_exec("sudo echo -e \"\n[$grp]\n\tpath = /home/shares/$grp\n\tread only = Yes\" 2>&1");
+            $criar = shell_exec("sudo echo -e \"\n[$grp]\n\tpath = /home/shares/$grp\n\tread only = No\" >> /usr/local/samba/etc/smb.conf 2>&1");
             $atualizar = shell_exec("sudo smbclient all reload-config 2>&1");
         }
     }
